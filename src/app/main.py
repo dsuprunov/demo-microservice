@@ -3,8 +3,9 @@ from dataclasses import asdict
 import uvicorn
 from environs import EnvValidationError
 from fastapi import FastAPI
+from pydantic import BaseModel
 
-from app.config import Config, load_config
+from app.config import load_config
 from app.logging import write_log
 
 
@@ -16,8 +17,22 @@ app = FastAPI(
 )
 
 
+class Message(BaseModel):
+    message_id: str
+    service_id: str
+    instance_id: str
+    timestamp: str
+    payload: str
+
+
 @app.get("/healthz")
 def healthz() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.get("/ping")
+def ping(message: Message) -> dict[str, str]:
+    write_log("INFO", event="RECEIVED", **message.model_dump())
     return {"status": "ok"}
 
 
