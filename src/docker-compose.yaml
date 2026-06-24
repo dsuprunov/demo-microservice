@@ -5,5 +5,11 @@ services:
       context: .
       dockerfile: Dockerfile
     image: demo-microservice:dev
+    environment:
+      SERVICE_ID: demo-microservice-a
+      INSTANCE_ID: demo-microservice
+      PEERS: '[]'
+      INTERVAL: '5'
+      TIMEOUT: '2'
     ports:
       - "8000:8000"
