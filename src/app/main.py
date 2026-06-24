@@ -1,7 +1,7 @@
 import asyncio
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import asdict
-from typing import AsyncIterator
 
 from environs import EnvValidationError
 from fastapi import FastAPI
@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             await sender_task
         except asyncio.CancelledError:
             pass
-        write_log("INFO", event="SHUTDOWN", **asdict(app.state.config))
+        write_log("INFO", event="SHUTDOWN")
 
 
 app = FastAPI(

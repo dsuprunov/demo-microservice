@@ -13,7 +13,7 @@ logging.basicConfig(
 logger = logging.getLogger("demo-microservice")
 
 
-def write_log(level: str, **fields: object) -> None:
+def write_log(level: str, **fields: object | None) -> None:
     logger.log(
         getattr(logging, level.upper(), logging.INFO),
         json.dumps(fields)
