@@ -1,0 +1,9 @@
+services:
+  demo-microservice:
+    container_name: demo-microservice
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: demo-microservice:dev
+    ports:
+      - "8000:8000"
