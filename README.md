@@ -1,4 +1,4 @@
-# Demo Microservice
+# README.md
 
 ## Local Two-Service Test
 
@@ -6,8 +6,6 @@ The local Docker Compose setup starts two services:
 
 * `demo-microservice-a` sends messages to `demo-microservice-b`
 * `demo-microservice-b` sends messages to `demo-microservice-a`
-
-Use two consoles from the repository root.
 
 Console 1:
 
@@ -19,13 +17,6 @@ Console 2:
 
 ```bash
 docker compose -f src/docker-compose.yaml up --build demo-microservice-b
-```
-
-Health checks from either console:
-
-```bash
-curl -i http://localhost:8001/healthz ; echo
-curl -i http://localhost:8002/healthz ; echo
 ```
 
 ## Manual Ping
@@ -41,7 +32,7 @@ curl -i -X GET http://localhost:8001/ping \
   }'; echo
 ```
 
-## Docker Image
+## Docker 
 
 ```bash
 docker build \
@@ -58,4 +49,17 @@ docker push dsuprunov/demo-microservice:latest
 
 docker buildx imagetools inspect dsuprunov/demo-microservice:0.1.0
 docker buildx imagetools inspect dsuprunov/demo-microservice:latest
+```
+
+## Kubernetes
+
+```bash
+kubectl apply -f manifests/demo-microservice-a.yaml
+kubectl apply -f manifests/demo-microservice-b.yaml
+
+kubectl get deployment,pod,service -n demo-microservice-a
+kubectl get deployment,pod,service -n demo-microservice-b
+
+kubectl logs -n demo-microservice-a -l app=demo-microservice-a -f
+kubectl logs -n demo-microservice-b -l app=demo-microservice-b -f
 ```

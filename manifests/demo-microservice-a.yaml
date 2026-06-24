@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo-microservice-a
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-microservice-a
+  namespace: demo-microservice-a
+  labels:
+    app: demo-microservice-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-microservice-a
+  template:
+    metadata:
+      labels:
+        app: demo-microservice-a
+    spec:
+      containers:
+        - name: demo-microservice
+          image: dsuprunov/demo-microservice:0.1.0
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: SERVICE_ID
+              value: demo-microservice-a
+            - name: INSTANCE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: PEERS
+              value: '["http://demo-microservice-b.demo-microservice-b:8000/ping"]'
+            - name: INTERVAL
+              value: "5"
+            - name: TIMEOUT
+              value: "2"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-microservice-a
+  namespace: demo-microservice-a
+  labels:
+    app: demo-microservice-a
+spec:
+  selector:
+    app: demo-microservice-a
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http
