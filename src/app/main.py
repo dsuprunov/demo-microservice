@@ -3,10 +3,10 @@ from dataclasses import asdict
 import uvicorn
 from environs import EnvValidationError
 from fastapi import FastAPI
-from pydantic import BaseModel
 
 from app.config import load_config
 from app.logging import write_log
+from app.message import Message
 
 
 app = FastAPI(
@@ -15,14 +15,6 @@ app = FastAPI(
     openapi_url=None,
     lifespan=None,
 )
-
-
-class Message(BaseModel):
-    message_id: str
-    service_id: str
-    instance_id: str
-    timestamp: str
-    payload: str
 
 
 @app.get("/healthz")
