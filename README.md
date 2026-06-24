@@ -2,8 +2,6 @@
 
 ## Manual Run
 
-Run the service inside Docker:
-
-```sh
+```bash
 docker compose -f src/docker-compose.yaml up --build
 ```
