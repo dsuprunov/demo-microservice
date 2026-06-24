@@ -1,15 +1,27 @@
 services:
-  demo-microservice:
-    container_name: demo-microservice
+  demo-microservice-a:
+    container_name: demo-microservice-a
     build:
       context: .
       dockerfile: Dockerfile
     image: demo-microservice:dev
     environment:
       SERVICE_ID: demo-microservice-a
-      INSTANCE_ID: demo-microservice
-      PEERS: '[]'
+      INSTANCE_ID: demo-microservice-a-local
+      PEERS: '["http://demo-microservice-b:8000/ping"]'
       INTERVAL: '5'
       TIMEOUT: '2'
     ports:
-      - "8000:8000"
+      - "8001:8000"
+
+  demo-microservice-b:
+    container_name: demo-microservice-b
+    image: demo-microservice:dev
+    environment:
+      SERVICE_ID: demo-microservice-b
+      INSTANCE_ID: demo-microservice-b-local
+      PEERS: '["http://demo-microservice-a:8000/ping"]'
+      INTERVAL: '5'
+      TIMEOUT: '2'
+    ports:
+      - "8002:8000"
